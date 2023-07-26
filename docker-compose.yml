@@ -19,15 +19,25 @@ services:
   
   postgres:
     image: postgres
-    container_name: ${POSTGRES_CONTAINER}
+    container_name: postgres
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - ./db/postgres:/var/lib/postgresql/data
     ports:
-      - ${POSTGRES_PORT}:5432
+      - 5432:5432
+    restart: always
+    networks:
+      - default
+    
+  redis:
+    build: ./redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./db/redis:/data
     restart: always
     networks:
       - default
