@@ -6,17 +6,19 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
-    
+
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
     restart: always
     ports:
       - "9092:9092"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  
+
   postgres:
     image: postgres
     container_name: postgres
@@ -30,7 +32,41 @@ services:
     restart: always
     networks:
       - default
-    
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 2000:8080
+    networks:
+      - default
+
+  rabbitmq:
+    image: rabbitmq:latest
+    ports:
+      - "5672:5672" # RabbitMQ default port for AMQP
+      - "15672:15672" # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: test
+      RABBITMQ_DEFAULT_PASS: test
+    volumes:
+      - ./db/rabbitmq_data:/var/lib/rabbitmq/mnesia
+    restart: always
+    networks:
+      - default
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mqtt_broker
+    ports:
+      - "1883:1883"
+      - "9001:9001" # WebSockets
+    volumes:
+      - ./db/mqtt/mosquitto_data:/mosquitto/data
+      - ./db/mqtt/mosquitto_config:/mosquitto/config
+      - ./db/mqtt/mosquitto_log:/mosquitto/log
+
   redis:
     build: ./redis
     container_name: redis

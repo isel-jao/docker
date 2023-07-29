@@ -1,1 +1,3 @@
-db
+db/postgres
+db/rabbitmq_data
+db/redis
