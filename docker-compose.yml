@@ -51,7 +51,7 @@ services:
       RABBITMQ_DEFAULT_USER: test
       RABBITMQ_DEFAULT_PASS: test
     volumes:
-      - ./db/rabbitmq_data:/var/lib/rabbitmq/mnesia
+      - ./rabbitmq_data:/var/lib/rabbitmq/mnesia
     restart: always
     networks:
       - default
@@ -61,11 +61,11 @@ services:
     container_name: mqtt_broker
     ports:
       - "1883:1883"
-      - "9001:9001" # WebSockets
+      - "9001:9001"
     volumes:
-      - ./db/mqtt/mosquitto_data:/mosquitto/data
-      - ./db/mqtt/mosquitto_config:/mosquitto/config
-      - ./db/mqtt/mosquitto_log:/mosquitto/log
+      - ./mqtt/mosquitto_data:/mosquitto/data
+      - ./mqtt/mosquitto_config:/mosquitto/config
+      - ./mqtt/mosquitto_log:/mosquitto/log
 
   redis:
     build: ./redis
